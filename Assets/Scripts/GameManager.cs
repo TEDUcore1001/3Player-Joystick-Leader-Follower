@@ -15,6 +15,9 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI scoreLabelText;
 
+    public float tempScore;
+    public float tempScore2;
+
     public TextMeshProUGUI scoreText2;
     public TextMeshProUGUI scoreLabelText2;
 
@@ -23,6 +26,7 @@ public class GameManager : MonoBehaviour
     public const float soundConstant = 1f;
 
     public bool isFinished;
+    public bool scoreNoted;
 
     public int dividedScore;
     public int dividedScore2;
@@ -61,6 +65,7 @@ public class GameManager : MonoBehaviour
         InvokeRepeating("ChangeScoreText", 0, 0.2f);
         playTime = 60f;
         seconds = 0;
+        tempScore = 0;
     }
 
     // Update is called once per frame
@@ -85,6 +90,7 @@ public class GameManager : MonoBehaviour
 
         if (cubePath.flag == 0)
         {
+            scoreNoted = false;
             scoreLabelText.text = "Player 1";
             scoreLabelText2.text = "Player 2";
             dividedScore = Mathf.RoundToInt(moveBoxes.totalScore / 10);
@@ -93,18 +99,34 @@ public class GameManager : MonoBehaviour
             scoreText2.text = moveBoxes.totalScore2.ToString("0");
             scoreText.text = moveBoxes.totalScore.ToString("0");
 
+
         } else if (cubePath.flag == 63)
         {
-            if (moveBoxes.totalScore > moveBoxes.totalScore2)
+            if (!scoreNoted)
+            {
+                tempScore = moveBoxes.totalScore;
+                tempScore2 = moveBoxes.totalScore2;
+                scoreNoted = true;
+            }
+
+
+            if (tempScore > tempScore2)
             {
                 scoreLabelText.text = "Winner !";
                 scoreLabelText2.text = "Finished.";
+
             } else
             {
                 scoreLabelText.text = "Finished.";
                 scoreLabelText2.text = "Winner !";
+                
             }
 
+            scoreText.text = tempScore.ToString("0");
+            scoreText2.text = tempScore2.ToString("0");
+
+            moveBoxes.totalScore = 0;
+            moveBoxes.totalScore2 = 0;
         }
 
         
